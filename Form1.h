@@ -235,7 +235,8 @@ namespace WindowsFormApplication1 {
 			// boldToolStripMenuItem
 			// 
 			this->boldToolStripMenuItem->Name = L"boldToolStripMenuItem";
-			this->boldToolStripMenuItem->Size = System::Drawing::Size(159, 22);
+			this->boldToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::NumPad0));
+			this->boldToolStripMenuItem->Size = System::Drawing::Size(221, 22);
 			this->boldToolStripMenuItem->Text = L"Bold";
 			this->boldToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::boldToolStripMenuItem_Click);
 			// 
@@ -246,27 +247,30 @@ namespace WindowsFormApplication1 {
 					this->smallerToolStripMenuItem
 			});
 			this->fontSizeToolStripMenuItem->Name = L"fontSizeToolStripMenuItem";
-			this->fontSizeToolStripMenuItem->Size = System::Drawing::Size(159, 22);
+			this->fontSizeToolStripMenuItem->Size = System::Drawing::Size(221, 22);
 			this->fontSizeToolStripMenuItem->Text = L"Font_Size";
 			// 
 			// biggerToolStripMenuItem
 			// 
 			this->biggerToolStripMenuItem->Name = L"biggerToolStripMenuItem";
-			this->biggerToolStripMenuItem->Size = System::Drawing::Size(113, 22);
+			this->biggerToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Up));
+			this->biggerToolStripMenuItem->Size = System::Drawing::Size(178, 22);
 			this->biggerToolStripMenuItem->Text = L"Bigger";
 			this->biggerToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::biggerToolStripMenuItem_Click);
 			// 
 			// smallerToolStripMenuItem
 			// 
 			this->smallerToolStripMenuItem->Name = L"smallerToolStripMenuItem";
-			this->smallerToolStripMenuItem->Size = System::Drawing::Size(113, 22);
+			this->smallerToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Down));
+			this->smallerToolStripMenuItem->Size = System::Drawing::Size(178, 22);
 			this->smallerToolStripMenuItem->Text = L"Smaller";
 			this->smallerToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::smallerToolStripMenuItem_Click);
 			// 
 			// backgroundToolStripMenuItem
 			// 
 			this->backgroundToolStripMenuItem->Name = L"backgroundToolStripMenuItem";
-			this->backgroundToolStripMenuItem->Size = System::Drawing::Size(159, 22);
+			this->backgroundToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Right));
+			this->backgroundToolStripMenuItem->Size = System::Drawing::Size(221, 22);
 			this->backgroundToolStripMenuItem->Text = L"No_Background";
 			this->backgroundToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::backgroundToolStripMenuItem_Click);
 			// 
@@ -441,8 +445,6 @@ private: System::Void OwnX_TextChanged(System::Object^  sender, System::EventArg
 private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 	Custom_Placement->Enabled = false;
 	fontsize = 9.75;
-	PingShow2->Location = Point(PingShow1->Location.X + PingShow1->Size.Width + 5, PingShow2->Location.Y);
-	Size = System::Drawing::Size(134, 14);
 	
 	std::ifstream file("temp.cfg");
 	std::string str;
@@ -487,6 +489,8 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 		}
 		i++;
 	}
+	PingShow2->Location = Point(PingShow1->Location.X + PingShow1->Size.Width + 5, PingShow2->Location.Y);
+	Size = System::Drawing::Size(PingShow1->Size.Width * 2 + 30, PingShow1->Size.Height);
 }
 private: System::Void Left_Lower_Click(System::Object^  sender, System::EventArgs^  e) {
 	Drawing::Rectangle resolution = Screen::PrimaryScreen->Bounds;
@@ -546,6 +550,7 @@ private: System::Void biggerToolStripMenuItem_Click(System::Object^  sender, Sys
 		PingShow1->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Bold);
 		PingShow2->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Bold);
 	}
+	Size = System::Drawing::Size(PingShow1->Size.Width * 2 + 30, PingShow1->Size.Height);
 }
 private: System::Void smallerToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 	fontsize--;
@@ -558,6 +563,7 @@ private: System::Void smallerToolStripMenuItem_Click(System::Object^  sender, Sy
 		PingShow1->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Bold);
 		PingShow2->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Bold);
 	}
+	Size = System::Drawing::Size(PingShow1->Size.Width * 2 + 30, PingShow1->Size.Height);
 }
 private: System::Void backgroundToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 	if (PingShow1->BackColor != Color::DimGray) {
