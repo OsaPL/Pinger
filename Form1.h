@@ -338,6 +338,10 @@ namespace WindowsFormApplication1 {
 			this->button1->Size = System::Drawing::Size(14, 14);
 			this->button1->TabIndex = 2;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::button1_MouseDown);
+			this->button1->MouseHover += gcnew System::EventHandler(this, &Form1::button1_MouseHover);
+			this->button1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::button1_MouseMove);
+			this->button1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::button1_MouseUp);
 			// 
 			// toolStripSeparator1
 			// 
@@ -452,9 +456,29 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 	while (std::getline(file, str))
 	{
 		String^ strman = gcnew String(str.c_str());
+		Drawing::Rectangle resolution = Screen::PrimaryScreen->Bounds;
 		switch (i) {
-		case 0:Location.X = System::Convert::ToDouble(strman); OwnX->Text = "" + System::Convert::ToDouble(strman);	break;
-		case 1:Location.Y = System::Convert::ToDouble(strman); OwnY->Text = "" + System::Convert::ToDouble(strman);	break;
+		case 0:
+			w = resolution.Width;
+			if (System::Convert::ToDouble(strman) > w) {
+				Location.X = 0; 
+				OwnX->Text = "" + 0;
+			}
+			else {
+				Location.X = System::Convert::ToDouble(strman);
+				OwnX->Text = "" + System::Convert::ToDouble(strman);
+			}
+			break;
+		case 1:	
+			h = resolution.Height;
+			if (System::Convert::ToDouble(strman) > h) {
+				Location.Y = 0;
+				OwnY->Text = "" + 0;
+			}
+			else {
+				Location.Y = System::Convert::ToDouble(strman);
+				OwnY->Text = "" + System::Convert::ToDouble(strman);
+			}	break;
 		case 2:strman=strman->Replace('.', ','); fontsize = System::Convert::ToDouble(strman);	break;
 		case 3:
 			if (System::Convert::ToDouble(strman)==1) {
@@ -601,6 +625,29 @@ private: System::Void Form1_FormClosing(System::Object^  sender, System::Windows
 	file << msclr::interop::marshal_as<std::string>(Adress1->Text) << std::endl;
 	file << msclr::interop::marshal_as<std::string>(Adress2->Text) << std::endl;
 	file.close();
+}
+		 private: bool mouseDown;
+		 private: Point lastPos;
+private: System::Void button1_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	if (mouseDown)
+	{
+		int xoffset = MousePosition.X - lastPos.X;
+		int yoffset = MousePosition.Y - lastPos.Y;	
+		Left += xoffset;
+		Top += yoffset;
+		lastPos = MousePosition;
+	}
+}
+private: System::Void button1_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	mouseDown = false;
+}
+private: System::Void button1_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	if (e->Button == System::Windows::Forms::MouseButtons::Left) {
+		mouseDown = true;
+		lastPos = MousePosition;
+	}
+}
+private: System::Void button1_MouseHover(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 }
