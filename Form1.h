@@ -418,10 +418,10 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 		PingShow1->Text = "(1)" + "Error";
 	}
 	else {
+		PingShow1->Text = "(1)" + ping1 + "ms";
 		if (ping1 > 280)
 			ping1 = 280;
 		PingShow1->ForeColor = Color::FromArgb((307 * ping1) / 220 - (ping1*ping1) / 550, ((ping1*ping1) * 17) / 17600 - (1003 * ping1) / 880 + 255, 0);
-		PingShow1->Text = "(1)" + ping1 + "ms";
 	}
 
 
@@ -430,10 +430,10 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 		PingShow2->Text = "(2)" + "Error";
 	}
 	else {
+		PingShow2->Text = "(2)" + ping2 + "ms";
 		if (ping2 > 280)
 			ping2 = 280;
 		PingShow2->ForeColor = Color::FromArgb((307 * ping2) / 220 - (ping2*ping2) / 550, ((ping2*ping2) * 17) / 17600 - (1003 * ping2) / 880 + 255, 0);
-		PingShow2->Text = "(2)" + ping2 + "ms";
 	}
 
 }
