@@ -1,5 +1,6 @@
 #include "icmpsendecho2.h"
 #include <msclr\marshal_cppstd.h>
+#include <fstream>
 #pragma once
 
 namespace WindowsFormApplication1 {
@@ -76,6 +77,7 @@ namespace WindowsFormApplication1 {
 	private: System::Windows::Forms::ToolStripMenuItem^  smallerToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 	private: System::Windows::Forms::ToolStripMenuItem^  backgroundToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  About;
 	private: System::ComponentModel::IContainer^  components;
 	private:
 		/// <summary>
@@ -114,6 +116,7 @@ namespace WindowsFormApplication1 {
 			this->Ping2 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Adress2 = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->About = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Quit = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->button1 = (gcnew System::Windows::Forms::Button());
@@ -149,12 +152,12 @@ namespace WindowsFormApplication1 {
 			// 
 			// contextMenuStrip
 			// 
-			this->contextMenuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
+			this->contextMenuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7) {
 				this->Placement,
-					this->Look, this->Ping1, this->Ping2, this->toolStripSeparator2, this->Quit
+					this->Look, this->Ping1, this->Ping2, this->toolStripSeparator2, this->About, this->Quit
 			});
 			this->contextMenuStrip->Name = L"contextMenuStrip";
-			this->contextMenuStrip->Size = System::Drawing::Size(153, 142);
+			this->contextMenuStrip->Size = System::Drawing::Size(131, 142);
 			// 
 			// Placement
 			// 
@@ -163,7 +166,7 @@ namespace WindowsFormApplication1 {
 					this->Left_Higher, this->Right_Lower, this->Right_Higher, this->toolStripSeparator3, this->Custom_Placement, this->OwnX, this->OwnY
 			});
 			this->Placement->Name = L"Placement";
-			this->Placement->Size = System::Drawing::Size(152, 22);
+			this->Placement->Size = System::Drawing::Size(130, 22);
 			this->Placement->Text = L"Placement";
 			// 
 			// Left_Lower
@@ -217,6 +220,7 @@ namespace WindowsFormApplication1 {
 			this->OwnY->Name = L"OwnY";
 			this->OwnY->Size = System::Drawing::Size(100, 23);
 			this->OwnY->Text = L"Y";
+			this->OwnY->TextChanged += gcnew System::EventHandler(this, &Form1::OwnX_TextChanged);
 			// 
 			// Look
 			// 
@@ -225,7 +229,7 @@ namespace WindowsFormApplication1 {
 					this->fontSizeToolStripMenuItem, this->backgroundToolStripMenuItem
 			});
 			this->Look->Name = L"Look";
-			this->Look->Size = System::Drawing::Size(152, 22);
+			this->Look->Size = System::Drawing::Size(130, 22);
 			this->Look->Text = L"Look";
 			// 
 			// boldToolStripMenuItem
@@ -270,7 +274,7 @@ namespace WindowsFormApplication1 {
 			// 
 			this->Ping1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->Adress1 });
 			this->Ping1->Name = L"Ping1";
-			this->Ping1->Size = System::Drawing::Size(152, 22);
+			this->Ping1->Size = System::Drawing::Size(130, 22);
 			this->Ping1->Text = L"Ping1";
 			// 
 			// Adress1
@@ -284,7 +288,7 @@ namespace WindowsFormApplication1 {
 			// 
 			this->Ping2->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->Adress2 });
 			this->Ping2->Name = L"Ping2";
-			this->Ping2->Size = System::Drawing::Size(152, 22);
+			this->Ping2->Size = System::Drawing::Size(130, 22);
 			this->Ping2->Text = L"Ping2";
 			// 
 			// Adress2
@@ -296,12 +300,19 @@ namespace WindowsFormApplication1 {
 			// toolStripSeparator2
 			// 
 			this->toolStripSeparator2->Name = L"toolStripSeparator2";
-			this->toolStripSeparator2->Size = System::Drawing::Size(149, 6);
+			this->toolStripSeparator2->Size = System::Drawing::Size(127, 6);
+			// 
+			// About
+			// 
+			this->About->Name = L"About";
+			this->About->Size = System::Drawing::Size(130, 22);
+			this->About->Text = L"About";
+			this->About->Click += gcnew System::EventHandler(this, &Form1::About_Click);
 			// 
 			// Quit
 			// 
 			this->Quit->Name = L"Quit";
-			this->Quit->Size = System::Drawing::Size(152, 22);
+			this->Quit->Size = System::Drawing::Size(130, 22);
 			this->Quit->Text = L"Quit";
 			this->Quit->Click += gcnew System::EventHandler(this, &Form1::Quit_Click);
 			// 
@@ -320,7 +331,7 @@ namespace WindowsFormApplication1 {
 			this->button1->ForeColor = System::Drawing::SystemColors::Highlight;
 			this->button1->Location = System::Drawing::Point(-1, -1);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(10, 10);
+			this->button1->Size = System::Drawing::Size(14, 14);
 			this->button1->TabIndex = 2;
 			this->button1->UseVisualStyleBackColor = false;
 			// 
@@ -334,7 +345,7 @@ namespace WindowsFormApplication1 {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Black;
-			this->ClientSize = System::Drawing::Size(366, 302);
+			this->ClientSize = System::Drawing::Size(358, 332);
 			this->ContextMenuStrip = this->contextMenuStrip;
 			this->ControlBox = false;
 			this->Controls->Add(this->button1);
@@ -349,6 +360,7 @@ namespace WindowsFormApplication1 {
 			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->TopMost = true;
 			this->TransparencyKey = System::Drawing::Color::Black;
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &Form1::Form1_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			this->Enter += gcnew System::EventHandler(this, &Form1::Form1_Enter);
 			this->Leave += gcnew System::EventHandler(this, &Form1::Form1_Leave);
@@ -430,6 +442,51 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 	Custom_Placement->Enabled = false;
 	fontsize = 9.75;
 	PingShow2->Location = Point(PingShow1->Location.X + PingShow1->Size.Width + 5, PingShow2->Location.Y);
+	Size = System::Drawing::Size(134, 14);
+	
+	std::ifstream file("temp.cfg");
+	std::string str;
+	int i = 0;
+	while (std::getline(file, str))
+	{
+		String^ strman = gcnew String(str.c_str());
+		switch (i) {
+		case 0:Location.X = System::Convert::ToDouble(strman); OwnX->Text = "" + System::Convert::ToDouble(strman);	break;
+		case 1:Location.Y = System::Convert::ToDouble(strman); OwnY->Text = "" + System::Convert::ToDouble(strman);	break;
+		case 2:strman=strman->Replace('.', ','); fontsize = System::Convert::ToDouble(strman);	break;
+		case 3:
+			if (System::Convert::ToDouble(strman)==1) {
+				PingShow1->BackColor = Color::DimGray;
+				PingShow2->BackColor = Color::DimGray;
+				backgroundToolStripMenuItem->Text = "No_Background";
+			}
+			else {
+				PingShow1->BackColor = Color::Black;
+				PingShow2->BackColor = Color::Black;
+				backgroundToolStripMenuItem->Text = "Background";
+			}
+			break;
+		case 4:
+			if (System::Convert::ToDouble(strman) == 1) {
+				PingShow1->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Bold);
+				PingShow2->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Bold);
+				boldToolStripMenuItem->Text = "Regular";
+			}
+			else {
+				PingShow1->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Regular);
+				PingShow2->Font = gcnew System::Drawing::Font("Arial", fontsize, FontStyle::Regular);
+				boldToolStripMenuItem->Text = "Bold";
+			}
+			break;
+		case 5:
+			Adress1->Text = strman;
+			break;
+		case 6:
+			Adress2->Text = strman;
+			break;
+		}
+		i++;
+	}
 }
 private: System::Void Left_Lower_Click(System::Object^  sender, System::EventArgs^  e) {
 	Drawing::Rectangle resolution = Screen::PrimaryScreen->Bounds;
@@ -514,6 +571,30 @@ private: System::Void backgroundToolStripMenuItem_Click(System::Object^  sender,
 		backgroundToolStripMenuItem->Text = "Background";
 	}
 
+}
+private: System::Void About_Click(System::Object^  sender, System::EventArgs^  e) {
+	MessageBox::Show("Created by Micha³ Osowski (Osa__PL)",
+		"About",
+		MessageBoxButtons::OK,
+		MessageBoxIcon::Information);
+}
+private: System::Void Form1_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+	std::fstream file;
+	file.open("temp.cfg", std::ios::trunc | std::ios::out);
+	file << Location.X << std::endl;
+	file << Location.Y << std::endl;
+	file << fontsize << std::endl;
+	if (PingShow1->BackColor != Color::DimGray)
+		file << false << std::endl;
+	else
+		file << true << std::endl;
+	if (PingShow1->Font->Style != FontStyle::Bold)
+		file << false << std::endl;
+	else
+		file << true << std::endl;
+	file << msclr::interop::marshal_as<std::string>(Adress1->Text) << std::endl;
+	file << msclr::interop::marshal_as<std::string>(Adress2->Text) << std::endl;
+	file.close();
 }
 };
 }
