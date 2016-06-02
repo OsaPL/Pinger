@@ -131,10 +131,11 @@ namespace WindowsFormApplication1 {
 			// PingShow2
 			// 
 			this->PingShow2->AutoSize = true;
-			this->PingShow2->BackColor = System::Drawing::Color::DimGray;
+			this->PingShow2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->PingShow2->Font = (gcnew System::Drawing::Font(L"Consolas", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238)));
-			this->PingShow2->ForeColor = System::Drawing::Color::Coral;
+			this->PingShow2->ForeColor = System::Drawing::Color::Olive;
 			this->PingShow2->Location = System::Drawing::Point(74, -1);
 			this->PingShow2->Name = L"PingShow2";
 			this->PingShow2->Size = System::Drawing::Size(105, 15);
@@ -144,10 +145,11 @@ namespace WindowsFormApplication1 {
 			// PingShow1
 			// 
 			this->PingShow1->AutoSize = true;
-			this->PingShow1->BackColor = System::Drawing::Color::DimGray;
+			this->PingShow1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->PingShow1->Font = (gcnew System::Drawing::Font(L"Consolas", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238)));
-			this->PingShow1->ForeColor = System::Drawing::Color::Coral;
+			this->PingShow1->ForeColor = System::Drawing::Color::Olive;
 			this->PingShow1->Location = System::Drawing::Point(12, -1);
 			this->PingShow1->Name = L"PingShow1";
 			this->PingShow1->Size = System::Drawing::Size(56, 15);
@@ -472,12 +474,12 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	}
 
 	double temp = ping1;
-	if (ping1 > lastping1 * 10)
+	if (ping1 > lastping1 * 5)
 		ping1 = lastping1;
 	lastping1 = temp;
 
 	temp = ping2;
-	if (ping2 > lastping2 * 10)
+	if (ping2 > lastping2 * 5)
 		ping2 = lastping2;
 	lastping2 = temp;
 
@@ -487,9 +489,32 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	}
 	else {
 		PingShow1->Text = "(1)" + ping1 + "ms";
-		if (ping1 > 280)
-			ping1 = 280;
-		PingShow1->ForeColor = Color::FromArgb((307 * ping1) / 220 - (ping1*ping1) / 550, ((ping1*ping1) * 17) / 17600 - (1003 * ping1) / 880 + 255, 0);
+		if (ping1 > 230)
+			ping1 = 230;
+		
+		int r, g;
+		if (ping1 < 25) {
+			r = 0;
+			g = 255;
+		}
+		if (ping1 < 120) {
+			r = 2.55*ping1 - 51;
+			if (r > 255)
+				r = 255;
+			if (r < 0)
+				r = 0;
+			g = 255;
+		}
+		if (ping1 >= 120) {
+			r = 255;
+			g = -2.125*ping1 + 510;
+			if (g > 255)
+				g = 255;
+			if (g < 0)
+				g = 0;
+		}
+
+		PingShow1->ForeColor = Color::FromArgb(r, g, 0);
 	}
 
 
@@ -499,8 +524,8 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	}
 	else {
 		PingShow2->Text = "(2)" + ping2 + "ms";
-		if (ping2 > 280)
-			ping2 = 280;
+		if (ping2 > 200)
+			ping2 = 200;
 		PingShow2->ForeColor = Color::FromArgb((307 * ping2) / 220 - (ping2*ping2) / 550, ((ping2*ping2) * 17) / 17600 - (1003 * ping2) / 880 + 255, 0);
 	}
 
@@ -546,8 +571,8 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 		case 2:strman=strman->Replace('.', ','); fontsize = System::Convert::ToDouble(strman);	break;
 		case 3:
 			if (System::Convert::ToDouble(strman)==1) {
-				PingShow1->BackColor = Color::DimGray;
-				PingShow2->BackColor = Color::DimGray;
+				PingShow1->BackColor = Color::FromArgb(64, 64, 64);
+				PingShow2->BackColor = Color::FromArgb(64, 64, 64);
 				backgroundToolStripMenuItem->Text = "No_Background";
 			}
 			else {
@@ -654,9 +679,9 @@ private: System::Void smallerToolStripMenuItem_Click(System::Object^  sender, Sy
 	Size = System::Drawing::Size(PingShow1->Size.Width * 2 + 30, PingShow1->Size.Height);
 }
 private: System::Void backgroundToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-	if (PingShow1->BackColor != Color::DimGray) {
-		PingShow1->BackColor = Color::DimGray;
-		PingShow2->BackColor = Color::DimGray;
+	if (PingShow1->BackColor != Color::FromArgb(64, 64, 64)) {
+		PingShow1->BackColor = Color::FromArgb(64, 64, 64);
+		PingShow2->BackColor = Color::FromArgb(64, 64, 64);
 		backgroundToolStripMenuItem->Text = "No_Background";
 	}
 	else {
@@ -678,7 +703,7 @@ private: System::Void Form1_FormClosing(System::Object^  sender, System::Windows
 	file << Location.X << std::endl;
 	file << Location.Y << std::endl;
 	file << fontsize << std::endl;
-	if (PingShow1->BackColor != Color::DimGray)
+	if (PingShow1->BackColor != Color::FromArgb(64, 64, 64))
 		file << false << std::endl;
 	else
 		file << true << std::endl;
