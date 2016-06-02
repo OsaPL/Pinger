@@ -1,6 +1,9 @@
 #include "icmpsendecho2.h"
 #include <msclr\marshal_cppstd.h>
 #include <fstream>
+
+#include <regex>
+
 #pragma once
 
 namespace WindowsFormApplication1 {
@@ -11,6 +14,7 @@ namespace WindowsFormApplication1 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Text::RegularExpressions;
 
 	/// <summary>
 	/// Summary for Form1
@@ -410,12 +414,72 @@ namespace WindowsFormApplication1 {
 		}
 	private:double ping1;
 	private:double ping2;
+	private:double lastping1;
+	private:double lastping2;
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 	//System::String^ managed = "test";
 	//std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
+	System::String^ managed = Adress1->Text;
+	std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
+	if (validateip(unmanaged) != 1) {
+		if (unmanaged.find_first_of(".") != std::string::npos) {
+			if (unmanaged.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) {
+				ping1 = -1;
+			}
+			else {
+				std::string str = parsedomain(unmanaged);
+				String^ strman = gcnew String(str.c_str());
+				if (strman == "Error") {
+					ping1 = -1;
+				}
+				else {
+					ping1 = pinger(str);
+				}
+			}
+		}
+		else {
+			ping1 = -1;
+		}
+	}
+	else {
+		ping1 = pinger(unmanaged);
+	}
 
-	ping1 = pinger(msclr::interop::marshal_as<std::string>(Adress1->Text));
-	ping2 = pinger(msclr::interop::marshal_as<std::string>(Adress2->Text));
+	managed = Adress2->Text;
+	unmanaged = msclr::interop::marshal_as<std::string>(managed);
+	if (validateip(unmanaged) != 1) {
+		if (unmanaged.find_first_of(".") != std::string::npos) {
+			if (unmanaged.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) {
+				ping2 = -1;
+			}
+			else {
+				std::string str = parsedomain(unmanaged);
+				String^ strman = gcnew String(str.c_str());
+				if (strman == "Error") {
+					ping2 = -1;
+				}
+				else {
+					ping2 = pinger(str);
+				}
+			}
+		}
+		else {
+			ping2 = -1;
+		}
+	}
+	else {
+		ping2 = pinger(unmanaged);
+	}
+
+	double temp = ping1;
+	if (ping1 > lastping1 * 10)
+		ping1 = lastping1;
+	lastping1 = temp;
+
+	temp = ping2;
+	if (ping2 > lastping2 * 10)
+		ping2 = lastping2;
+	lastping2 = temp;
 
 	if (ping1 == -1) {
 		PingShow1->ForeColor = System::Drawing::Color::Violet;

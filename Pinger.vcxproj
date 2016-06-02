@@ -15,6 +15,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>Pinger</RootNamespace>
+    <WindowsTargetPlatformVersion>7</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -100,6 +101,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="icmpsendecho2.h" />
+    <ClInclude Include="infix_iterator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

@@ -44,6 +44,9 @@
     <ClInclude Include="icmpsendecho2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="infix_iterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">

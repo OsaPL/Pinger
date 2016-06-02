@@ -7,10 +7,112 @@
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "ws2_32.lib")
 
+#include "stdafx.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdio.h>
+#include <windows.h>
 #include <string>
+#include <iostream>
+#pragma comment(lib, "ws2_32.lib")
 
-double pinger(std::string ip)
+bool validateip(std::string ipAddress)
 {
+	struct sockaddr_in sa;
+	int result = inet_pton(AF_INET, ipAddress.c_str(), &(sa.sin_addr));
+	return result != 0;
+}
+std::string parsedomain(std::string domain)
+{
+	//std::string domain;
+	std::string str = domain;
+	char * argv = new char[str.size() + 1];
+	std::copy(str.begin(), str.end(), argv);
+	argv[str.size()] = '\0'; // don't forget the terminating 0
+							 //-----------------------------------------
+							 // Declare and initialize variables
+	WSADATA wsaData;
+	int iResult;
+
+	DWORD dwError;
+	int i = 0;
+
+	struct hostent *remoteHost;
+	char *host_name;
+	struct in_addr addr;
+
+	char **pAlias;
+
+	// Initialize Winsock
+	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (iResult != 0) {
+		printf("WSAStartup failed: %d\n", iResult);
+		return "Error";
+	}
+
+	host_name = argv;
+
+	printf("Calling gethostbyname with %s\n", host_name);
+	remoteHost = gethostbyname(host_name);
+
+	if (remoteHost == NULL) {
+		dwError = WSAGetLastError();
+		if (dwError != 0) {
+			if (dwError == WSAHOST_NOT_FOUND) {
+				printf("Host not found\n");
+				return "Error";
+			}
+			else if (dwError == WSANO_DATA) {
+				printf("No data record found\n");
+				return "Error";
+			}
+			else {
+				printf("Function failed with error: %ld\n", dwError);
+				return "Error";
+			}
+		}
+	}
+	else {
+		printf("Function returned:\n");
+		printf("\tOfficial name: %s\n", remoteHost->h_name);
+		for (pAlias = remoteHost->h_aliases; *pAlias != 0; pAlias++) {
+			printf("\tAlternate name #%d: %s\n", ++i, *pAlias);
+		}
+		printf("\tAddress type: ");
+		switch (remoteHost->h_addrtype) {
+		case AF_INET:
+			printf("AF_INET\n");
+			break;
+		case AF_NETBIOS:
+			printf("AF_NETBIOS\n");
+			break;
+		default:
+			printf(" %d\n", remoteHost->h_addrtype);
+			break;
+		}
+		printf("\tAddress length: %d\n", remoteHost->h_length);
+
+		i = 0;
+		if (remoteHost->h_addrtype == AF_INET)
+		{
+			while (remoteHost->h_addr_list[i] != 0) {
+				addr.s_addr = *(u_long *)remoteHost->h_addr_list[i++];
+				printf("\tIP Address #%d: %s\n", i, inet_ntoa(addr));
+			}
+		}
+		else if (remoteHost->h_addrtype == AF_NETBIOS)
+		{
+			printf("NETBIOS address was returned\n");
+		}
+	}
+	// don't forget to free the string after finished using it
+	delete[] argv;
+	std::string returned(inet_ntoa(addr));
+	return returned;
+}
+double pinger(std::string ip)
+{	
 	const char* argv = ip.c_str();
     HANDLE hIcmpFile;
     unsigned long ipaddr = INADDR_NONE;
@@ -28,15 +130,12 @@ double pinger(std::string ip)
 
     hIcmpFile = IcmpCreateFile();
     if (hIcmpFile == INVALID_HANDLE_VALUE) {
-        printf("\tUnable to open handle.\n");
-        printf("IcmpCreatefile returned error: %ld\n", GetLastError());
         return -1;
     }
     // Allocate space for at a single reply
     ReplySize = sizeof (ICMP_ECHO_REPLY) + sizeof (SendData) + 8;
     ReplyBuffer = (VOID *) malloc(ReplySize);
     if (ReplyBuffer == NULL) {
-        printf("\tUnable to allocate memory for reply buffer\n");
         return -1;
     }
 
@@ -93,3 +192,4 @@ double pinger(std::string ip)
     }
     return replytime;
 }
+
