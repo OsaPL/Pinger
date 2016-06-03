@@ -474,12 +474,12 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	}
 
 	double temp = ping1;
-	if (ping1 > lastping1 * 5)
+	if (ping1 > lastping1 * 5 && lastping1!=-1)
 		ping1 = lastping1;
 	lastping1 = temp;
 
 	temp = ping2;
-	if (ping2 > lastping2 * 5)
+	if (ping2 > lastping2 * 5 && lastping2 != -1)
 		ping2 = lastping2;
 	lastping2 = temp;
 
