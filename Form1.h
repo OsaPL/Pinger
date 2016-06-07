@@ -15,6 +15,7 @@ namespace WindowsFormApplication1 {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::Text::RegularExpressions;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// Summary for Form1
@@ -421,6 +422,7 @@ namespace WindowsFormApplication1 {
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 	//System::String^ managed = "test";
 	//std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
+
 	System::String^ managed = Adress1->Text;
 	std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
 	if (validateip(unmanaged) != 1) {
