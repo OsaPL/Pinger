@@ -419,61 +419,12 @@ namespace WindowsFormApplication1 {
 	private:double ping2;
 	private:double lastping1;
 	private:double lastping2;
+	System::String^ managed;
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 	//System::String^ managed = "test";
 	//std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
 
 	System::String^ managed = Adress1->Text;
-	std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
-	if (validateip(unmanaged) != 1) {
-		if (unmanaged.find_first_of(".") != std::string::npos) {
-			if (unmanaged.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) {
-				ping1 = -1;
-			}
-			else {
-				std::string str = parsedomain(unmanaged);
-				String^ strman = gcnew String(str.c_str());
-				if (strman == "Error") {
-					ping1 = -1;
-				}
-				else {
-					ping1 = pinger(str);
-				}
-			}
-		}
-		else {
-			ping1 = -1;
-		}
-	}
-	else {
-		ping1 = pinger(unmanaged);
-	}
-
-	managed = Adress2->Text;
-	unmanaged = msclr::interop::marshal_as<std::string>(managed);
-	if (validateip(unmanaged) != 1) {
-		if (unmanaged.find_first_of(".") != std::string::npos) {
-			if (unmanaged.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) {
-				ping2 = -1;
-			}
-			else {
-				std::string str = parsedomain(unmanaged);
-				String^ strman = gcnew String(str.c_str());
-				if (strman == "Error") {
-					ping2 = -1;
-				}
-				else {
-					ping2 = pinger(str);
-				}
-			}
-		}
-		else {
-			ping2 = -1;
-		}
-	}
-	else {
-		ping2 = pinger(unmanaged);
-	}
 
 	double temp = ping1;
 	if (ping1 > lastping1 * 5 && lastping1!=-1)
@@ -606,7 +557,39 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 	}
 	PingShow2->Location = Point(PingShow1->Location.X + PingShow1->Size.Width + 5, PingShow2->Location.Y);
 	Size = System::Drawing::Size(PingShow1->Size.Width * 2 + 30, PingShow1->Size.Height);
+
+	//multihread
+	Thread^ newThread = gcnew Thread(gcnew ParameterizedThreadStart(ping));
+	newThread->Start(42);
+
 }
+		 private: void ping(int nr) {
+			 std::string unmanaged = msclr::interop::marshal_as<std::string>(managed);
+			 if (validateip(unmanaged) != 1) {
+				 if (unmanaged.find_first_of(".") != std::string::npos) {
+					 if (unmanaged.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) {
+						 ping1 = -1;
+					 }
+					 else {
+						 std::string str = parsedomain(unmanaged);
+						 String^ strman = gcnew String(str.c_str());
+						 if (strman == "Error") {
+							 ping1 = -1;
+						 }
+						 else {
+							 ping1 = pinger(str);
+						 }
+					 }
+				 }
+				 else {
+					 ping1 = -1;
+				 }
+			 }
+			 else {
+				 ping1 = pinger(unmanaged);
+			 }
+
+		 }
 private: System::Void Left_Lower_Click(System::Object^  sender, System::EventArgs^  e) {
 	Drawing::Rectangle resolution = Screen::PrimaryScreen->Bounds;
 	h = resolution.Height;
